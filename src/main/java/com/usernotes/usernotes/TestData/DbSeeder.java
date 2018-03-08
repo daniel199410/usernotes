@@ -21,24 +21,15 @@ public class DbSeeder implements CommandLineRunner{
     public void run(String... strings) throws Exception {
         User daniel = new User(
             "zorin",
-            "Daniel",
-            "123",
-            Arrays.asList(
-                new Note("nota1", "Lorem ipsum"),
-                new Note("nota2", "Lorem ipsum")
-            )
+            "123"
         );
         User daniela = new User(
             "zorina",
-            "Daniela",
-            "123",
-            Arrays.asList(
-            new Note("nota3", "Lorem ipsum"),
-            new Note("nota4", "Lorem ipsum")
-            )
+            "123"
         );
         this.userRepository.deleteAll();
         List<User> users = Arrays.asList(daniel, daniela);
         this.userRepository.save(users);
+
     }
 }

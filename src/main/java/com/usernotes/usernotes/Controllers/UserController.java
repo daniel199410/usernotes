@@ -1,36 +1,64 @@
 package com.usernotes.usernotes.Controllers;
 
-import com.usernotes.usernotes.Domain.Note;
 import com.usernotes.usernotes.Domain.User;
-import com.usernotes.usernotes.Repository.UserRepository;
+import com.usernotes.usernotes.service.NoteService;
+import com.usernotes.usernotes.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("Users")
-public class UserController {
-    private UserRepository userRepository;
+@RequestMapping("user")
+final class UserController {
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    @Autowired
+    private final UserService service;
+
+    @Autowired
+    private final NoteService noteService;
+
+    @Autowired
+    UserController(UserService service, NoteService noteService) {
+        this.service = service;
+        this.noteService = noteService;
     }
 
-    @GetMapping("/all")
-    public List<User> getAll(){
-        List<User> hotels = this.userRepository.findAll();
-        return hotels;
+    @PostMapping()
+    String create(@RequestBody @Valid User UserEntry) {
+        if(service.findUserByUsername(UserEntry.getUsername()) != null){
+            return "The user already exist";
+        }
+        return service.create(UserEntry).toString();
     }
 
-    @GetMapping("/{id}")
-    public User getById(@PathVariable("id") String id){
-        User user = this.userRepository.findById(id);
-        return user;
+    @DeleteMapping("/{username}")
+    String delete(@PathVariable("username") String username) throws IllegalArgumentException{
+        try{
+            noteService.deleteByUsername(username);
+            return service.delete(username).toString();
+        }catch(IllegalArgumentException ex){
+            return "The user does not exist";
+        }
     }
 
-    @GetMapping("/{id}/notes")
-    public List<Note> getNotes(@PathVariable("id") String id){
-        List<Note> notes = this.userRepository.findById(id).getNotes();
-        return notes;
+    @GetMapping()
+    List<User> getAll() {
+        return service.readAll();
+    }
+
+    @GetMapping("/{userName}")
+    String getUserByUsername(@PathVariable("username") String username) {
+        return service.findUserByUsername(username).toString();
+    }
+
+    @PatchMapping()
+    String updatePassword(@RequestBody @Valid User user) throws NullPointerException {
+        try{
+            return service.updatePassword(user.getUsername(), user.getPassword()).toString();
+        }catch(NullPointerException ex){
+            return "The user does not exist";
+        }
     }
 }

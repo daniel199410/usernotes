@@ -1,45 +1,50 @@
 package com.usernotes.usernotes.Domain;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.List;
+import org.springframework.data.annotation.Id;
 
-@Document(collection = "Users")
 public class User {
     @Id
     private String id;
-    @Indexed
+
     private String username;
-    private String name;
     private String password;
-    private List<Note> notes;
 
-    public User(String username, String name, String password, List<Note> notes) {
+    public User() {}
+
+    public User(String username, String password) {
         this.username = username;
-        this.name = name;
         this.password = password;
-        this.notes = notes;
     }
 
-    public String getId() {
-        return id;
+    @Override
+    public String toString() {
+        return String.format(
+                "User[id=%s, username='%s']",
+                id, username, password);
     }
 
-    public String getUsername() {
+    public String getUsername(){
         return username;
     }
 
-    public String getName() {
-        return name;
+    public void setPassword(String password){
+        this.password = password;
+    }
+
+    public String getId(){
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
         return password;
-    }
-
-    public List<Note> getNotes() {
-        return notes;
     }
 }

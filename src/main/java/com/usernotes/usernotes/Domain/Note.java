@@ -1,24 +1,47 @@
 package com.usernotes.usernotes.Domain;
 
+import com.usernotes.usernotes.Repository.UserRepository;
+import com.usernotes.usernotes.service.UserService;
+import org.springframework.data.annotation.Id;
+import org.springframework.beans.factory.annotation.Autowired;
+
+
 public class Note {
-    private String id;
+
+    @Id
+    public String id;
+
+    private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
+
     private String title;
-    private String content;
+    private String description;
+    private String username;
 
-    public Note(String title, String content) {
+    public Note() {}
+
+    public Note(String title, String description, String username) {
+        this.description = description;
         this.title = title;
-        this.content = content;
+        this.username = username;
     }
 
-    public String getId() {
-        return id;
+    @Override
+    public String toString() {
+        return String.format("Note created");
     }
 
-    public String getTitle() {
-        return title;
+    public String getTitle(){
+        return this.title;
     }
 
-    public String getContent() {
-        return content;
+    public String getUsername(){
+        return this.username;
+    }
+
+    public void update(Note note){
+        this.description = note.description;
+        this.title = note.title;
     }
 }

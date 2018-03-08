@@ -18,7 +18,8 @@ public class UserService {
     }
 
     public User create(User user){
-        return userRepository.save(user);
+        userRepository.save(user);
+        return user;
     }
 
     public User delete(String username){

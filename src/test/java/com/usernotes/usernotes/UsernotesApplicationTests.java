@@ -1,7 +1,5 @@
 package com.usernotes.usernotes;
 
-import com.usernotes.usernotes.Domain.User;
-import com.usernotes.usernotes.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -27,9 +27,8 @@ final class UserController {
 
     @PostMapping()
     String create(@RequestBody @Valid User UserEntry) {
-        if(service.findUserByUsername(UserEntry.getUsername()) != null){
-            return "The user already exist";
-        }
+        if(service.findUserByUsername(UserEntry.getUsername()) != null)
+            throw new IllegalArgumentException("The user already exists");
         return service.create(UserEntry).toString();
     }
 
@@ -39,7 +38,7 @@ final class UserController {
             noteService.deleteByUsername(username);
             return service.delete(username).toString();
         }catch(IllegalArgumentException ex){
-            return "The user does not exist";
+            throw new IllegalArgumentException("User not found");
         }
     }
 
@@ -58,7 +57,7 @@ final class UserController {
         try{
             return service.updatePassword(user.getUsername(), user.getPassword()).toString();
         }catch(NullPointerException ex){
-            return "The user does not exist";
+            throw new IllegalArgumentException("User not found");
         }
     }
 }

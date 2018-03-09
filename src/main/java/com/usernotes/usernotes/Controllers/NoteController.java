@@ -22,13 +22,11 @@ public class NoteController{
     }
 
     @PostMapping()
-    String add(@RequestBody Note note) {
-        if(noteService.findNoteByUsernameTitle(note.getUsername(), note.getTitle()) != null){
-            return "Note exists";
-        }
-        if(userService.findUserByUsername(note.getUsername()) == null){
-            return "The user does not exist";
-        }
+    String add(@RequestBody Note note) throws IllegalArgumentException {
+        if(noteService.findNoteByUsernameTitle(note.getUsername(), note.getTitle()) != null)
+            throw new IllegalArgumentException("The user already exists");
+        if(userService.findUserByUsername(note.getUsername()) == null)
+            throw new IllegalArgumentException("The note's username does not exist");
         return noteService.create(note).toString();
     }
 
@@ -50,12 +48,11 @@ public class NoteController{
     @PatchMapping()
     String update(@RequestBody @Valid Note note) throws NullPointerException {
         try{
-            if(userService.findUserByUsername(note.getUsername()) == null){
-                return "The user does not exist";
-            }
+            if(userService.findUserByUsername(note.getUsername()) == null)
+                throw new IllegalArgumentException("The note's username does not exist");
             return noteService.update(note).toString();
         }catch (NullPointerException ex){
-            return "The Note does not exist";
+            throw new IllegalArgumentException("Not found note");
         }
     }
 }
